@@ -20,10 +20,23 @@ module.exports = merge(common, {
       new OptimizeCSSAssetsPlugin(),
       // 压缩js
       new UglifyJsPlugin({
-        cache: true, // 是否用缓存
-        parallel: true, // 并发打包
-        // sourceMap: false, // es6 -> es5 转换时会用到
-      })
+        uglifyOptions: {
+          ie8: false,
+          ecma: 8,
+          mangle: true,
+          compress: {
+            drop_console: true,
+            side_effects: false,
+            reduce_vars: true // 把使用多次的静态值自动定义为变量
+          },
+          output: {
+            comments: false,
+            beautify: false
+          }
+        },
+        parallel: true,
+        cache: true
+      }),
     ]
   },
   devtool: 'cheap-module-source-map',
@@ -42,37 +55,9 @@ module.exports = merge(common, {
           }
         ]
       },
-      {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          // 这里配置提取css文件,如果提取失败,就使用style-loader加载到页面
-          fallback: 'style-loader',
-          use: 'css-loader',
-        })
-      },
-      {
-        test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            'css-loader',
-            'less-loader',
-            {
-              loader: 'style-resources-loader',
-              options: {
-                patterns: path.resolve(__dirname, './src/css/var.less'),
-              }
-            }
-          ]
-        })
-      }
     ]
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new ExtractTextPlugin({
-      filename: './css/[name]-buddle.css',
-      allChunks: true,
-    })
   ]
 })
