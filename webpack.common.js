@@ -4,8 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // vue识别
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-
 const Autoprefixer = require('autoprefixer');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const isDEV = process.env.NODE_ENV !== 'production'
+
+console.log('isDEV :>> ', isDEV);
+
 
 // 分离css代码 webpack4.0比较支持
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -19,7 +23,8 @@ module.exports = {
   resolve: {
     alias: {
       '@': path.join(__dirname, './src'),
-    }
+    },
+    extensions: ['.js', '.json', '.vue', '.jsx']
   },
   module: {
     rules: [
@@ -47,11 +52,35 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.(le|c)ss$/,
+        use: [
+          isDEV ? 'style-loader' :  MiniCssExtractPlugin.loader,
+          'css-loader',
+          'less-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: path.join(__dirname, './postcss.config.js')
+              }
+            }
+          },
+          {
+            loader: 'style-resources-loader',
+            options: {
+              patterns: path.resolve(__dirname, './src/css/var.less'),
+            }
+          }
+        ]
       }
     ]
   },
   plugins: [
     Autoprefixer,
+    new VueLoaderPlugin(),
+    
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, './index.html'),
@@ -62,6 +91,11 @@ module.exports = {
         collapseWhitespace:true    //删除空白符与换行符
       }
     }),
-    new VueLoaderPlugin()
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: './css/[name].[hash].css',
+      chunkFilename: './css/[id].[hash].css',
+    })
   ]
 }

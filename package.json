@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config webpack.dev.js --open --hot --mode development",
-    "prod:bulid": "webpack --config webpack.prod.js --mode=production"
+    "prod:build": "cross-env NODE_ENV=production webpack --config webpack.prod.js  --mode=production"
   },
   "author": "fishLan",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "babel-loader": "^8.1.0",
     "buffer-fill": "^1.0.0",
     "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.5.2",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^6.0.0",
@@ -32,16 +33,17 @@
     "style-loader": "^1.1.4",
     "style-resources-loader": "^1.3.3",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.1.6",
+    "vue-loader": "^15.9.1",
+    "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
     "webpack-bundle-analyzer": "^3.7.0",
     "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "lodash": "^4.17.15",
-    "vue-loader": "^15.9.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6"
   }
 }
